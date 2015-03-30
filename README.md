@@ -58,5 +58,19 @@ Finally, make sure it passes all the tests I have also provided:
 
       $ ruby spec/crypto_spec.rb
 
+### C. Advanced Ciphers and Testing
+Your team must implement the double transposition and AES ciphers we saw in class:
+
+- Implement the two new ciphers:
+  - DoubleTranspositionCipher in `double_trans_cipher.rb`
+  - AesCipher in aes_cipher.rb
+- Write more tests for these ciphers in `spec/crypto_spec.rb`
+  - Can you DRY out all the tests using metaprogramming as we saw in class?
+
 ## Submission
 Please submit one solution for your team. You may simply submit the HTTP url of the git repository where we can find your solution.
+
+### [Statistics on Credit Card use](http://www.creditcards.com/credit-card-news/credit-card-industry-facts-personal-debt-statistics-1276.php)
+- [Total number of credit card transactions in the United States:](http://www.creditcards.com/credit-card-news/credit-card-industry-facts-personal-debt-statistics-1276.php#ixzz3VSrXbOYz)
+  - 26.2 billion in 2012
+  - 19 billion in 2003
