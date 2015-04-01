@@ -7,7 +7,7 @@ module SubstitutionCipher
     # Returns: String
     def self.encrypt(document, key)
       # TODO: encrypt string using caeser cipher
-      document.chars.map{ |x| (x.ord + 3).chr }.to_s
+      document.to_s.chars.map{ |x| x.ord + key }
     end
 
     # Decrypts String document using integer key
@@ -17,7 +17,7 @@ module SubstitutionCipher
     # Returns: String
     def self.decrypt(document, key)
       # TODO: decrypt string using caeser cipher
-      document.chars.map{ |x| (x.ord - 3).chr }.to_s
+      document.map{ |x| (x.ord - key).chr }.join
     end
   end
 =begin

@@ -13,7 +13,7 @@ describe 'Test card info encryption' do
       enc = SubstitutionCipher::Caeser.encrypt(@cc, @key)
       enc.wont_equal @cc.to_s
     end
-
+  
     it 'should decrypt text' do
       enc = SubstitutionCipher::Caeser.encrypt(@cc, @key)
       dec = SubstitutionCipher::Caeser.decrypt(enc, @key)
