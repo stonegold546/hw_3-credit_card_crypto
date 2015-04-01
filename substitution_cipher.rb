@@ -28,21 +28,27 @@ module SubstitutionCipher
     #   key: Fixnum (integer)
     # Returns: String
 
-    def self.fill_book(k, r, c)
-      loop do
-        a = r.rand(128)
-        c[k] = a unless c.value?(a)
-        break if c.key?(k)
+    def self.fill_book(key, cb)
+      # Fill code book
+      def self.int_loop(key, r, c)
+        # Iterator to create unique random values
+        loop do
+          a = r.rand(128)
+          c[key] = a unless c.value?(a)
+          break if c.key?(key)
+        end
       end
+      rand1 = Random.new(key)
+      (32..127).each do |x|
+        int_loop(x, rand1, cb)
+      end
+      cb
     end
 
     def self.encrypt(document, key)
       # TODO: encrypt string using a permutation cipher
       code_book = {}
-      rand1 = Random.new(key)
-      (32..127).each do |x|
-        fill_book(x, rand1, code_book)
-      end
+      fill_book(key, code_book)
       document.to_s.chars.map { |x| code_book[x.ord] }
     end
 
@@ -54,10 +60,7 @@ module SubstitutionCipher
     def self.decrypt(document, key)
       # TODO: decrypt string using a permutation cipher
       code_book = {}
-      rand1 = Random.new(key)
-      (32..127).each do |x|
-        fill_book(x, rand1, code_book)
-      end
+      fill_book(key, code_book)
       document.map { |x| (code_book.key(x)).chr }.join
     end
   end
