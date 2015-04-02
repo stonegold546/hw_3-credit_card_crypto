@@ -17,7 +17,7 @@ module SubstitutionCipher
     # Returns: String
     def self.decrypt(document, key)
       # TODO: decrypt string using caeser cipher
-      eval(document).map { |x| (x.ord - key).chr }.join
+      eval(document).map { |x| (x - key).chr }.join
     end
   end
 
