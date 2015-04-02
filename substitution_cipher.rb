@@ -7,7 +7,7 @@ module SubstitutionCipher
     # Returns: String
     def self.encrypt(document, key)
       # TODO: encrypt string using caeser cipher
-      document.to_s.chars.map { |x| x.ord + key }
+      document.to_s.chars.map { |x| x.ord + key }.to_s
     end
 
     # Decrypts String document using integer key
@@ -17,7 +17,7 @@ module SubstitutionCipher
     # Returns: String
     def self.decrypt(document, key)
       # TODO: decrypt string using caeser cipher
-      document.map { |x| (x.ord - key).chr }.join
+      eval(document).map { |x| (x.ord - key).chr }.join
     end
   end
 
@@ -48,7 +48,7 @@ module SubstitutionCipher
       # TODO: encrypt string using a permutation cipher
       code_book = {}
       fill_book(key, code_book)
-      document.to_s.chars.map { |x| code_book[x.ord] }
+      document.to_s.chars.map { |x| code_book[x.ord] }.to_s
     end
 
     # Decrypts String document using integer key
@@ -60,7 +60,7 @@ module SubstitutionCipher
       # TODO: decrypt string using a permutation cipher
       code_book = {}
       fill_book(key, code_book)
-      document.map { |x| (code_book.key(x)).chr }.join
+      eval(document).map { |x| (code_book.key(x)).chr }.join
     end
   end
 end
