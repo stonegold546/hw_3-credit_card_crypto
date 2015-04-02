@@ -1,12 +1,12 @@
 module SubstitutionCipher
-  module Caeser
+  module Caesar
     # Encrypts document using key
     # Arguments:
     #   document: String
     #   key: Fixnum (integer)
     # Returns: String
     def self.encrypt(document, key)
-      # TODO: encrypt string using caeser cipher
+      # TODO: encrypt string using caesar cipher
       document.to_s.chars.map { |x| x.ord + key }.to_s
     end
 
@@ -16,7 +16,7 @@ module SubstitutionCipher
     #   key: Fixnum (integer)
     # Returns: String
     def self.decrypt(document, key)
-      # TODO: decrypt string using caeser cipher
+      # TODO: decrypt string using caesar cipher
       eval(document).map { |x| (x - key).chr }.join
     end
   end
