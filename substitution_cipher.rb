@@ -30,12 +30,12 @@ module SubstitutionCipher
 
     def self.fill_book(key, cb)
       # Fill code book
-      def self.int_loop(key, r, c)
+      def self.int_loop(key_l, r, c)
         # Iterator to create unique random values
         begin
           a = r.rand(128)
-          c[key] = a unless c.value?(a)
-        end until c.key?(key)
+          c[key_l] = a unless c.value?(a)
+        end until c.key?(key_l)
       end
       rand1 = Random.new(key)
       (32..127).each do |x|
