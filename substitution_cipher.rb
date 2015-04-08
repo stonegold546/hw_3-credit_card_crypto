@@ -7,7 +7,12 @@ module SubstitutionCipher
     # Returns: String
     def self.encrypt(document, key)
       # TODO: encrypt string using caesar cipher
-      document.to_s.chars.map { |x| x.ord + key }.to_s
+      key %= 127
+      document.to_s.chars.map do |x|
+        a = x.ord + key
+        a -= 127 if a > 127
+        a.chr
+      end.join
     end
 
     # Decrypts String document using integer key
@@ -17,7 +22,12 @@ module SubstitutionCipher
     # Returns: String
     def self.decrypt(document, key)
       # TODO: decrypt string using caesar cipher
-      eval(document).map { |x| (x - key).chr }.join
+      key %= 127
+      document.chars.map do |x|
+        a = x.ord - key
+        a += 127 if a < 0
+        a.chr
+      end.join
     end
   end
 
@@ -28,15 +38,16 @@ module SubstitutionCipher
     #   key: Fixnum (integer)
     # Returns: String
 
+    def self.int_loop(key_l, r, c)
+      # Iterator to create unique random values
+      begin
+        a = r.rand(128)
+        c[key_l] = a unless c.value?(a)
+      end until c.key?(key_l)
+    end
+
     def self.fill_book(key, cb)
       # Fill code book
-      def self.int_loop(key_l, r, c)
-        # Iterator to create unique random values
-        begin
-          a = r.rand(128)
-          c[key_l] = a unless c.value?(a)
-        end until c.key?(key_l)
-      end
       rand1 = Random.new(key)
       (32..127).each do |x|
         int_loop(x, rand1, cb)
@@ -48,7 +59,7 @@ module SubstitutionCipher
       # TODO: encrypt string using a permutation cipher
       code_book = {}
       fill_book(key, code_book)
-      document.to_s.chars.map { |x| code_book[x.ord] }.to_s
+      document.to_s.chars.map { |x| code_book[x.ord].chr }.join
     end
 
     # Decrypts String document using integer key
@@ -60,7 +71,7 @@ module SubstitutionCipher
       # TODO: decrypt string using a permutation cipher
       code_book = {}
       fill_book(key, code_book)
-      eval(document).map { |x| (code_book.key(x)).chr }.join
+      document.chars.map { |x| (code_book.key(x.ord)).chr }.join
     end
   end
 end
