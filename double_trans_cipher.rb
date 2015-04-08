@@ -20,29 +20,17 @@ module DoubleTranspositionCipher
       ciph_arr << doc_arr[row_a[x]]
       x += 1
     end
-    ciph_arr.join
-=begin
     col_a = (0...nc).to_a.shuffle(random: rand1)
     ciph_arr.flatten!
     lth = col_a.length
+    ciph_int = []
     ciph_arr.each_index do |idx|
       mod = idx % lth
       div = idx / lth
-      ciph_arr[idx], ciph_arr[div * lth + col_a[mod]] = ciph_arr[div * lth + col_a[mod]], ciph_arr[idx]
+      b = div * lth + col_a[mod]
+      ciph_int[b] = ciph_arr[idx]
     end
-=end
-=begin
-    (0...lth).to_a.each do |idx|
-      row_a.each do |x_idx|
-        if x_idx == 0
-          ciph_arr[idx], ciph_arr[col_a[idx]] = ciph_arr[col_a[idx]], ciph_arr[idx]
-        else
-          ciph_arr[x_idx * idx], ciph_arr[x_idx * col_a[idx]] = ciph_arr[x_idx * col_a[idx]], ciph_arr[x_idx * idx]
-        end
-      end
-    end
-=end
-    ciph_arr.join
+    ciph_int.join
   end
 
   def self.decrypt(ciphertext, key)
@@ -53,16 +41,16 @@ module DoubleTranspositionCipher
     rand1 = Random.new(key)
     row_a = (0...nr).to_a.shuffle(random: rand1)
     col_a = (0...nc).to_a.shuffle(random: rand1)
-=begin
     lth = col_a.length
+    ciph_int = []
     ciph_arr.each_index do |idx|
       mod = idx % lth
       div = idx / lth
-      ciph_arr[idx], ciph_arr[div * lth + col_a[mod]] = ciph_arr[div * lth + col_a[mod]], ciph_arr[idx]
+      b = div * lth + col_a[mod]
+      ciph_int[idx] = ciph_arr[b]
     end
-=end
     x = 0
-    ciph_text = ciph_arr.each_slice(nc).to_a
+    ciph_text = ciph_int.each_slice(nc).to_a
     org_doc = [[]]
     ciph_text.each do
       org_doc[row_a[x]] = ciph_text[x]
