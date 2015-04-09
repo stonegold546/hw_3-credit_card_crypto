@@ -38,7 +38,6 @@ describe 'Test card info encryption' do
 
   # TODO: Add tests for double transposition and AES ciphers
   #       Can you DRY out the tests using metaprogramming? (see lecture slide)
-
   methods = [
     ['Double Transposition Cipher', DoubleTranspositionCipher], ['AES Cipher', AesCipher]
   ]
