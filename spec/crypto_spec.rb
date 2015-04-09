@@ -38,29 +38,22 @@ describe 'Test card info encryption' do
 
   # TODO: Add tests for double transposition and AES ciphers
   #       Can you DRY out the tests using metaprogramming? (see lecture slide)
-  describe 'Using Double Transposition cipher' do
-    it 'should encrypt card information' do
-      enc = DoubleTranspositionCipher.encrypt(@cc, @key)
-      enc.wont_equal @cc.to_s
-    end
 
-    it 'should decrypt card information' do
-      enc = DoubleTranspositionCipher.encrypt(@cc, @key)
-      dec = DoubleTranspositionCipher.decrypt(enc, @key)
-      dec.must_equal @cc.to_s
-    end
-  end
+  methods = [
+    ['Double Transposition Cipher', DoubleTranspositionCipher], ['AES Cipher', AesCipher]
+  ]
+  methods.each do |name, meth|
+    describe "Using #{name} cipher" do
+      it 'should encrypt card information' do
+        enc = meth.encrypt(@cc, @key)
+        enc.wont_equal @cc.to_s
+      end
 
-  describe 'Using AES cipher' do
-    it 'should encrypt card information' do
-      enc = AesCipher.encrypt(@cc, @key)
-      enc.wont_equal @cc.to_s
-    end
-
-    it 'should decrypt card information' do
-      enc = AesCipher.encrypt(@cc, @key)
-      dec = AesCipher.decrypt(enc, @key)
-      dec.must_equal @cc.to_s
+      it 'should decrypt card information' do
+        enc = meth.encrypt(@cc, @key)
+        dec = meth.decrypt(enc, @key)
+        dec.must_equal @cc.to_s
+      end
     end
   end
 end

@@ -1,5 +1,4 @@
 module DoubleTranspositionCipher
-  require 'matrix'
   def self.encrypt(document, key)
     # TODO: FILL THIS IN!
     ## Suggested steps for double transposition cipher
