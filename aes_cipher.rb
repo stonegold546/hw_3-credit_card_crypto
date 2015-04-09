@@ -1,6 +1,5 @@
 require 'openssl'
 require 'json'
-require 'digest/md5'
 
 module AesCipher
   def self.encrypt(document, key)
@@ -12,7 +11,7 @@ module AesCipher
     document = document.to_s
     cipher = OpenSSL::Cipher::AES.new(256, :CBC)
     cipher.encrypt
-    cipher.key = Digest::MD5.hexdigest(key.to_s)
+    cipher.key = Digest::SHA256.hexdigest(key.to_s)
     iv = cipher.random_iv
     encrypted = (cipher.update(document) + cipher.final)
     my_hash = {
@@ -25,7 +24,7 @@ module AesCipher
     # TODO: decrypt from JSON output (aes_crypt) of encrypt method above
     decipher = OpenSSL::Cipher::AES.new(256, :CBC)
     decipher.decrypt
-    decipher.key = (Digest::MD5.hexdigest(key.to_s))
+    decipher.key = (Digest::SHA256.hexdigest(key.to_s))
     aes_crypt = JSON.parse(aes_crypt)
     decipher.iv = aes_crypt['iv'].pack('H*')
     dec_t = aes_crypt['ciphertext'].pack('H*')
