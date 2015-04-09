@@ -64,18 +64,6 @@ module DoubleTranspositionCipher
       else
         ciph_int[idx] = ciph_arr[b]
       end
-=begin
-      loop do
-        # Necessary to ensure last line is fully swapped
-        # Without it, last line has missing elements
-        idx += 1
-        mod = idx % lth
-        div = idx / lth
-        b = div * lth + col_a[mod]
-        break if mod == 0
-        ciph_int[idx] = ciph_arr[b]
-      end if idx == ciphertext.length - 1
-=end
     end
     ciph_text = ciph_int.each_slice(nc).to_a
     org_doc = [[]]
