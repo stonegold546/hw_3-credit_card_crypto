@@ -26,6 +26,16 @@ module DoubleTranspositionCipher
       div = idx / lth
       b = div * lth + col_a[mod]
       ciph_int[b] = ciph_arr[idx]
+      loop do
+        # Necessary to ensure last line is fully swapped
+        # Replacing with nulls
+        idx += 1
+        mod = idx % lth
+        div = idx / lth
+        b = div * lth + col_a[mod]
+        break if mod == 0
+        ciph_int[b] = 0.chr
+      end if idx == document.length - 1
       # Swaps based on col_swap by each index
       # Using index as column manipulation proving to be difficult
       # Alternatively, could create matrix for easier manipulation,
@@ -49,7 +59,12 @@ module DoubleTranspositionCipher
       mod = idx % lth
       div = idx / lth
       b = div * lth + col_a[mod]
-      ciph_int[idx] = ciph_arr[b]
+      if ciph_arr[b] == 0.chr
+        ciph_int[idx] = ''
+      else
+        ciph_int[idx] = ciph_arr[b]
+      end
+=begin
       loop do
         # Necessary to ensure last line is fully swapped
         # Without it, last line has missing elements
@@ -60,6 +75,7 @@ module DoubleTranspositionCipher
         break if mod == 0
         ciph_int[idx] = ciph_arr[b]
       end if idx == ciphertext.length - 1
+=end
     end
     ciph_text = ciph_int.each_slice(nc).to_a
     org_doc = [[]]

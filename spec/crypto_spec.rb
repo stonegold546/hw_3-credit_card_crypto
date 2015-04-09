@@ -1,6 +1,7 @@
 require_relative '../credit_card'
 require_relative '../substitution_cipher'
 require_relative '../double_trans_cipher'
+require_relative '../aes_cipher'
 require 'minitest/autorun'
 
 describe 'Test card info encryption' do
