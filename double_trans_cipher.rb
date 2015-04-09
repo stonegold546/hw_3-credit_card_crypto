@@ -3,22 +3,21 @@ module DoubleTranspositionCipher
   def self.encrypt(document, key)
     # TODO: FILL THIS IN!
     ## Suggested steps for double transposition cipher
-    # 1. find number of rows/cols such that matrix is almost square
-    # 2. break plaintext into evenly sized blocks
-    # 3. sort rows in predictably random way using key as seed
-    # 4. sort columns of each row in predictably random way
-    # 5. return joined cyphertext
     document = document.to_s
+    # 1. find number of rows/cols such that matrix is almost square
     nc = Math.sqrt(document.length).round
-    doc_arr = document.chars.each_slice(nc).to_a
+    # 2. break plaintext into evenly sized blocks
+    doc_arr = document.chars.each_slice(nc).to_a # Multidimensional array
     nr = doc_arr.length
     rand1 = Random.new(key)
-    row_a = (0...nr).to_a.shuffle(random: rand1)
-    col_a = (0...nc).to_a.shuffle(random: rand1)
+    row_a = (0...nr).to_a.shuffle(random: rand1) # Row swap - new positions
+    col_a = (0...nc).to_a.shuffle(random: rand1) # Col swap - new positions
+    # 3. sort rows in predictably random way using key as seed
     ciph_arr = [[]]
     doc_arr.each_index do |idx|
       ciph_arr << doc_arr[row_a[idx]]
-    end
+    end # Creates new array shifted by rows
+    # 4. sort columns of each row in predictably random way
     ciph_arr.flatten!
     lth = col_a.length
     ciph_int = []
@@ -27,15 +26,12 @@ module DoubleTranspositionCipher
       div = idx / lth
       b = div * lth + col_a[mod]
       ciph_int[b] = ciph_arr[idx]
-      loop do
-        idx += 1
-        mod = idx % lth
-        div = idx / lth
-        b = div * lth + col_a[mod]
-        break if mod == 0
-        ciph_int[idx] = ciph_arr[b]
-      end if idx == document.length - 1
+      # Swaps based on col_swap by each index
+      # Using index as column manipulation proving to be difficult
+      # Alternatively, could create matrix for easier manipulation,
+      # fill with nil to make square, then swap rows and columns
     end
+    # 5. return joined cyphertext
     ciph_int.join
   end
 
@@ -55,6 +51,8 @@ module DoubleTranspositionCipher
       b = div * lth + col_a[mod]
       ciph_int[idx] = ciph_arr[b]
       loop do
+        # Necessary to ensure last line is fully swapped
+        # Without it, last line has missing elements
         idx += 1
         mod = idx % lth
         div = idx / lth
