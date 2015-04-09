@@ -27,6 +27,14 @@ module DoubleTranspositionCipher
       div = idx / lth
       b = div * lth + col_a[mod]
       ciph_int[b] = ciph_arr[idx]
+      loop do
+        idx += 1
+        mod = idx % lth
+        div = idx / lth
+        b = div * lth + col_a[mod]
+        break if mod == 0
+        ciph_int[idx] = ciph_arr[b]
+      end if idx == document.length - 1
     end
     ciph_int.join
   end
@@ -46,16 +54,14 @@ module DoubleTranspositionCipher
       div = idx / lth
       b = div * lth + col_a[mod]
       ciph_int[idx] = ciph_arr[b]
-      if idx == ciphertext.length - 1
-        loop do
-          idx += 1
-          mod = idx % lth
-          div = idx / lth
-          b = div * lth + col_a[mod]
-          break if mod == 0
-          ciph_int[idx] = ciph_arr[b]
-        end
-      end
+      loop do
+        idx += 1
+        mod = idx % lth
+        div = idx / lth
+        b = div * lth + col_a[mod]
+        break if mod == 0
+        ciph_int[idx] = ciph_arr[b]
+      end if idx == ciphertext.length - 1
     end
     ciph_text = ciph_int.each_slice(nc).to_a
     org_doc = [[]]
