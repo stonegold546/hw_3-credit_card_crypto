@@ -14,21 +14,18 @@ module DoubleTranspositionCipher
     nr = doc_arr.length
     rand1 = Random.new(key)
     row_a = (0...nr).to_a.shuffle(random: rand1)
-    ciph_arr = [[]]
-    x = 0
-    doc_arr.each do
-      ciph_arr << doc_arr[row_a[x]]
-      x += 1
-    end
     col_a = (0...nc).to_a.shuffle(random: rand1)
+    ciph_arr = [[]]
+    doc_arr.each_index do |idx|
+      ciph_arr << doc_arr[row_a[idx]]
+    end
     ciph_arr.flatten!
     lth = col_a.length
     ciph_int = []
     ciph_arr.each_index do |idx|
       mod = idx % lth
       div = idx / lth
-      b = div * lth + col_a[mod]
-      ciph_int[b] = ciph_arr[idx]
+      ciph_int[div * lth + col_a[mod]] = ciph_arr[idx]
     end
     ciph_int.join
   end
@@ -46,16 +43,14 @@ module DoubleTranspositionCipher
     ciph_arr.each_index do |idx|
       mod = idx % lth
       div = idx / lth
-      b = div * lth + col_a[mod]
-      ciph_int[idx] = ciph_arr[b]
+      ciph_int[idx] = ciph_arr[div * lth + col_a[mod]]
     end
-    x = 0
     ciph_text = ciph_int.each_slice(nc).to_a
     org_doc = [[]]
-    ciph_text.each do
-      org_doc[row_a[x]] = ciph_text[x]
-      x += 1
+    ciph_text.each_index do |idx|
+      org_doc[row_a[idx]] = ciph_text[idx]
     end
     org_doc.join
+    ciph_int.length
   end
 end
