@@ -50,4 +50,17 @@ describe 'Test card info encryption' do
       dec.must_equal @cc.to_s
     end
   end
+
+  describe 'Using AES cipher' do
+    it 'should encrypt card information' do
+      enc = AesCipher.encrypt(@cc, @key)
+      enc.wont_equal @cc.to_s
+    end
+
+    it 'should decrypt card information' do
+      enc = AesCipher.encrypt(@cc, @key)
+      dec = AesCipher.decrypt(enc, @key)
+      dec.must_equal @cc.to_s
+    end
+  end
 end
