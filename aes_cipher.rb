@@ -25,7 +25,6 @@ module AesCipher
     # TODO: decrypt from JSON output (aes_crypt) of encrypt method above
     decipher = OpenSSL::Cipher::AES.new(256, :CBC)
     decipher.decrypt
-    # decipher.padding = 0
     decipher.key = (Digest::MD5.hexdigest(key.to_s))
     aes_crypt = JSON.parse(aes_crypt)
     decipher.iv = aes_crypt['iv'].pack('H*')
