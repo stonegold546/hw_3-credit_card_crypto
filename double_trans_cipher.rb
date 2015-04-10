@@ -61,11 +61,6 @@ module DoubleTranspositionCipher
     row_s, col_s, doc_multi_arr, nc, nr = *generic_att(document, key)
     cipher_mat = Matrix.rows(doc_multi_arr)
     doc_mat = matrix_dec_row_col_swap(cipher_mat, row_s, col_s, nr, nc)
-    original = ''
-    doc_mat.to_a.flatten.each do |char|
-      char = '' if char == 0.chr
-      original << char
-    end
-    original
+    doc_mat.to_a.join.tr(0.chr, '')
   end
 end
