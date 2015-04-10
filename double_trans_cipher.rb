@@ -1,74 +1,71 @@
 module DoubleTranspositionCipher
-  def self.encrypt(document, key)
-    # TODO: FILL THIS IN!
-    ## Suggested steps for double transposition cipher
-    document = document.to_s
-    # 1. find number of rows/cols such that matrix is almost square
-    nc = Math.sqrt(document.length).round
-    # 2. break plaintext into evenly sized blocks
-    doc_arr = document.chars.each_slice(nc).to_a # Multidimensional array
-    nr = doc_arr.length
-    rand1 = Random.new(key)
-    row_a = (0...nr).to_a.shuffle(random: rand1) # Row swap - new positions
-    col_a = (0...nc).to_a.shuffle(random: rand1) # Col swap - new positions
-    # 3. sort rows in predictably random way using key as seed
-    ciph_arr = [[]]
-    doc_arr.each_index do |idx|
-      ciph_arr << doc_arr[row_a[idx]]
-    end # Creates new array shifted by rows
-    # 4. sort columns of each row in predictably random way
-    ciph_arr.flatten!
-    lth = col_a.length
-    ciph_int = []
-    ciph_arr.each_index do |idx|
-      mod = idx % lth
-      div = idx / lth
-      b = div * lth + col_a[mod]
-      ciph_int[b] = ciph_arr[idx]
-      loop do
-        # Necessary to ensure last line is fully swapped
-        # Replacing with nulls
-        idx += 1
-        mod = idx % lth
-        div = idx / lth
-        b = div * lth + col_a[mod]
-        break if mod == 0
-        ciph_int[b] = 0.chr
-      end if idx == document.length - 1
-      # Swaps based on col_swap by each index
-      # Using index as column manipulation proving to be difficult
-      # Alternatively, could create matrix for easier manipulation,
-      # fill with nil to make square, then swap rows and columns
-    end
-    # 5. return joined cyphertext
-    ciph_int.join
+  require 'matrix'
+  def self.shuffle(num, my_rand) # deterministic replacement sequence method
+    (0...num).to_a.shuffle(random: my_rand)
   end
 
-  def self.decrypt(ciphertext, key)
-    # TODO: FILL THIS IN!
-    nc = Math.sqrt(ciphertext.length).round
-    ciph_arr = ciphertext.chars
-    nr = ciph_arr.each_slice(nc).to_a.length
-    rand1 = Random.new(key)
-    row_a = (0...nr).to_a.shuffle(random: rand1)
-    col_a = (0...nc).to_a.shuffle(random: rand1)
-    lth = col_a.length
-    ciph_int = []
-    ciph_arr.each_index do |idx|
-      mod = idx % lth
-      div = idx / lth
-      b = div * lth + col_a[mod]
-      if ciph_arr[b] == 0.chr
-        ciph_int[idx] = ''
-      else
-        ciph_int[idx] = ciph_arr[b]
-      end
+  def self.generic_att(document, key) # attributes needed for encryot/decrypt
+    nc = Math.sqrt(document.length).round
+    doc_multi_arr = document.chars.each_slice(nc).to_a
+    nr = doc_multi_arr.length
+    rand_1 = Random.new(key)
+    row_a = shuffle(nr, rand_1)
+    col_a = shuffle(nc, rand_1)
+    [row_a, col_a, doc_multi_arr, nc, nr]
+  end
+
+  def self.pad_multi_arr(multi_arr, nc)
+    # pad multi array with values to allow for matrix manipulation
+    (0...nc).to_a.each do |idx|
+      multi_arr.last[idx] = 0.chr if multi_arr.last[idx].nil?
     end
-    ciph_text = ciph_int.each_slice(nc).to_a
-    org_doc = [[]]
-    ciph_text.each_index do |idx|
-      org_doc[row_a[idx]] = ciph_text[idx]
+    multi_arr
+  end
+
+  def self.matrix_swap(my_mat, swap_arr, nr)
+    new_mat = Matrix[]
+    (0...nr).to_a.each_index do |idx|
+      new_mat = Matrix.rows(new_mat.to_a << my_mat.row(swap_arr[idx]))
     end
-    org_doc.join
+    new_mat
+  end
+
+  def self.matrix_row_col_swap(my_mat, swap_row, swap_col, nr, nc)
+    my_mat = matrix_swap(my_mat, swap_row, nr).transpose
+    matrix_swap(my_mat, swap_col, nc).transpose
+  end
+
+  def self.matrix_dec_swap(my_mat, swap_arr, nr)
+    interm_arr = [[]]
+    (0...nr).to_a.each_index do |idx|
+      interm_arr[swap_arr[idx]] = my_mat.row(idx).to_a
+    end
+    Matrix.rows(interm_arr)
+  end
+
+  def self.matrix_dec_row_col_swap(my_mat, swap_row, swap_col, nr, nc)
+    my_mat = matrix_dec_swap(my_mat.transpose, swap_col, nc).transpose
+    matrix_dec_swap(my_mat, swap_row, nr)
+  end
+
+  def self.encrypt(document, key)
+    document = document.to_s
+    row_s, col_s, doc_multi_arr, nc, nr = *generic_att(document, key)
+    doc_multi_arr = pad_multi_arr(doc_multi_arr, nc)
+    my_mat = Matrix.rows(doc_multi_arr)
+    cipher = matrix_row_col_swap(my_mat, row_s, col_s, nr, nc)
+    cipher.to_a.join
+  end
+
+  def self.decrypt(document, key)
+    row_s, col_s, doc_multi_arr, nc, nr = *generic_att(document, key)
+    cipher_mat = Matrix.rows(doc_multi_arr)
+    doc_mat = matrix_dec_row_col_swap(cipher_mat, row_s, col_s, nr, nc)
+    original = ''
+    doc_mat.to_a.flatten.each do |char|
+      char = '' if char == 0.chr
+      original << char
+    end
+    original
   end
 end
