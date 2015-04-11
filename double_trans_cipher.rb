@@ -1,22 +1,26 @@
+# Double Transposition Cipher
 module DoubleTranspositionCipher
+  def self.get_gen_att(my_doc, my_rand)
+    n_col = Math.sqrt(my_doc.length).round
+    my_doc_arr = my_doc.chars.each_slice(nc).to_a
+    n_row = my_doc_arr.length
+    row_s = (0...nr).to_a.shuffle(random: my_rand)
+    col_s = (0...nc).to_a.shuffle(random: my_rand)
+    [row_s, col_s, n_col, n_row, my_doc_arr]
+  end
+
   def self.encrypt(document, key)
-    # TODO: FILL THIS IN!
-    ## Suggested steps for double transposition cipher
     document = document.to_s
-    # 1. find number of rows/cols such that matrix is almost square
     nc = Math.sqrt(document.length).round
-    # 2. break plaintext into evenly sized blocks
     doc_arr = document.chars.each_slice(nc).to_a # Multidimensional array
     nr = doc_arr.length
     rand1 = Random.new(key)
     row_a = (0...nr).to_a.shuffle(random: rand1) # Row swap - new positions
     col_a = (0...nc).to_a.shuffle(random: rand1) # Col swap - new positions
-    # 3. sort rows in predictably random way using key as seed
     ciph_arr = [[]]
     doc_arr.each_index do |idx|
       ciph_arr << doc_arr[row_a[idx]]
     end # Creates new array shifted by rows
-    # 4. sort columns of each row in predictably random way
     ciph_arr.flatten!
     lth = col_a.length
     ciph_int = []
@@ -40,7 +44,6 @@ module DoubleTranspositionCipher
       # Alternatively, could create matrix for easier manipulation,
       # fill with nil to make square, then swap rows and columns
     end
-    # 5. return joined cyphertext
     ciph_int.join
   end
 
