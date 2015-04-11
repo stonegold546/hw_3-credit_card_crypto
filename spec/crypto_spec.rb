@@ -6,7 +6,8 @@ require 'minitest/autorun'
 
 describe 'Test card info encryption' do
   before do
-    @cc = CreditCard.new('4916603231464963', 'Mar-30-2020', 'Soumya Ray', 'Visa')
+    @cc = CreditCard.new('4916603231464963', 'Mar-30-2020', 'Soumya Ray',
+                         'Visa')
     @key = 3
   end
 
@@ -36,8 +37,6 @@ describe 'Test card info encryption' do
     end
   end
 
-  # TODO: Add tests for double transposition and AES ciphers
-  #       Can you DRY out the tests using metaprogramming? (see lecture slide)
   methods = [
     ['Double Transposition Cipher', DoubleTranspositionCipher],
     ['AES Cipher', AesCipher]

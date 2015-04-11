@@ -15,11 +15,10 @@ module LuhnValidator
       end
     end
   end
-  
+
   def validate_checksum
     nums_a = number.to_s.chars.map(&:to_i)
 
-    # TODO: use the integers in nums_a to validate its last check digit
     nums_a.reverse!
     checksum = my_inject(nums_a, 2)
     checksum % 10 == 0
