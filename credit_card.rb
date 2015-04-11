@@ -1,9 +1,11 @@
 require_relative './luhn_validator.rb'
 require 'json'
 require 'openssl'
+require 'forwardable'
 
 class CreditCard
   include LuhnValidator
+  extend Forwardable
 
   # instance variables with automatic getter/setter methods
   attr_accessor :number, :expiration_date, :owner, :credit_network
@@ -34,11 +36,7 @@ class CreditCard
   end
 
   # return a hash of the serialized credit card object
-  def hash
-    to_s.hash
-  end
-
-  # delegate :hash, to: :self
+  delegate hash: :to_s
 
   # return a cryptographically secure hash
   def hash_secure
